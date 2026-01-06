@@ -1,0 +1,178 @@
+import streamlit as st
+
+# -------------------------------------------------
+# PAGE CONFIG
+# -------------------------------------------------
+st.set_page_config(
+    page_title="Mediterranean Masala Chips",
+    page_icon="🫒",
+    layout="wide"
+)
+
+# -------------------------------------------------
+# SESSION STATE
+# -------------------------------------------------
+if "cart_qty" not in st.session_state:
+    st.session_state.cart_qty = 0
+
+# -------------------------------------------------
+# GLOBAL STYLES
+# -------------------------------------------------
+st.markdown("""
+<style>
+body {
+    background-color: #F6F7F3;
+}
+h1, h2, h3 {
+    font-family: 'Helvetica Neue', sans-serif;
+    color: #111111;
+}
+p {
+    color: #333333;
+    font-size: 16px;
+}
+.hero {
+    padding: 4rem 3rem;
+}
+.card {
+    background-color: #FFFFFF;
+    padding: 2.5rem;
+    border-radius: 18px;
+    box-shadow: 0px 10px 30px rgba(0,0,0,0.08);
+}
+.price {
+    font-size: 32px;
+    font-weight: 700;
+    margin-top: 1rem;
+}
+.tagline {
+    font-size: 20px;
+    color: #555555;
+}
+.footer {
+    text-align: center;
+    color: #666666;
+    padding: 2rem;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# -------------------------------------------------
+# NAVIGATION
+# -------------------------------------------------
+st.sidebar.title("Mediterranean Masala")
+page = st.sidebar.radio(
+    "Navigate",
+    ["Home", "Product", "Checkout"],
+    label_visibility="collapsed"
+)
+
+# =================================================
+# HOME PAGE
+# =================================================
+if page == "Home":
+    st.markdown("<div class='hero'>", unsafe_allow_html=True)
+    st.markdown("## Made for the Table.")
+    st.markdown(
+        "<p class='tagline'>A premium, baked snack inspired by Mediterranean warmth and Indian masala.</p>",
+        unsafe_allow_html=True
+    )
+
+    col1, col2 = st.columns([1.2, 1])
+
+    with col1:
+        st.markdown("""
+        **Mediterranean Masala Chips** is a flavour-first snack brand designed for modern hosting.
+
+        Our baked flatbread crisps bring together Mediterranean spice traditions
+        and gentle Indian masala warmth — crafted to be shared, dipped,
+        and enjoyed over long conversations.
+
+        This is not an impulse snack.  
+        This is the chip you proudly place on the table.
+        """)
+        st.markdown("**Baked. Balanced. Made for the Table.**")
+
+    with col2:
+        st.image("assets/lifestyle.jpg", use_column_width=True)
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+# =================================================
+# PRODUCT PAGE
+# =================================================
+elif page == "Product":
+    st.markdown("<div class='hero'>", unsafe_allow_html=True)
+    st.markdown("## Mediterranean Masala Chips")
+    st.markdown("### Smoked Paprika & Cumin")
+
+    col1, col2 = st.columns([1, 1])
+
+    with col1:
+        st.image("assets/product.png", use_column_width=True)
+
+    with col2:
+        st.markdown("""
+        **Baked flatbread crisps crafted for dipping and sharing.**
+
+        A mild, aromatic blend of smoked paprika and cumin —
+        warm, balanced, and endlessly snackable.
+
+        **Pairs perfectly with:**
+        - Hummus
+        - Yogurt dips
+        - Chutneys
+        - Wine & cocktails
+        """)
+
+        st.markdown("<div class='price'>$5.99</div>", unsafe_allow_html=True)
+
+        if st.button("Add to Cart"):
+            st.session_state.cart_qty += 1
+            st.success("Added to cart")
+
+        st.markdown(f"🛒 **Items in cart:** {st.session_state.cart_qty}")
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+# =================================================
+# CHECKOUT PAGE
+# =================================================
+elif page == "Checkout":
+    st.markdown("<div class='hero'>", unsafe_allow_html=True)
+    st.markdown("## Checkout")
+
+    if st.session_state.cart_qty == 0:
+        st.warning("Your cart is empty.")
+    else:
+        total = st.session_state.cart_qty * 5.99
+
+        st.markdown("<div class='card'>", unsafe_allow_html=True)
+        st.markdown(f"**Mediterranean Masala Chips × {st.session_state.cart_qty}**")
+        st.markdown(f"### Total: ${total:.2f}")
+
+        with st.form("checkout_form"):
+            st.text_input("Full Name")
+            st.text_input("Email")
+            st.text_area("Shipping Address")
+            st.text_input("Card Number")
+            submitted = st.form_submit_button("Place Order")
+
+            if submitted:
+                st.success("Order placed successfully (demo checkout)")
+                st.session_state.cart_qty = 0
+
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+# -------------------------------------------------
+# FOOTER
+# -------------------------------------------------
+st.markdown("""
+<hr>
+<div class="footer">
+<strong>Mediterranean Masala Chips</strong><br>
+Baked. Balanced. Made for the Table.
+</div>
+""", unsafe_allow_html=True)
